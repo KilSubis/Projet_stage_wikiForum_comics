@@ -4,10 +4,11 @@ namespace App\Entity;
 
 use App\Repository\ComicsRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ComicsRepository::class)]
+#[UniqueEntity('Nom')]
 class Comics
 {
     #[ORM\Id]

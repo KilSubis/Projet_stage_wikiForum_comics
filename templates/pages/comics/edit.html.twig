@@ -1,0 +1,36 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+Modification d'un comics - ComicsStorage
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  <h1 class="mt-4">Modifier un comics</h1>
+
+  {{ form_start(form) }}
+    
+       <div class="form-group">
+         {{ form_label(form.Nom)}}
+         {{ form_widget(form.Nom)}}
+         <div class="form-error">
+         {{ form_errors(form.Nom)}}
+         </div>
+       </div>
+
+       <div class="form-group">
+         {{ form_label(form.Prix)}}
+         {{ form_widget(form.Prix)}}
+         <div class="form-error">
+         {{ form_errors(form.Prix)}}
+         </div>
+       </div>
+
+       <div class="form-group">
+         {{ form_row(form.submit) }}
+       </div>
+
+{{ form_end(form) }}
+</div>
+{% endblock %}

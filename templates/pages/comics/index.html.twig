@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ComicsStorage -  Mes Comics
+{% endblock %}
+
+{% block body %}
+   <div class="container mt-4">
+    {% if not comics is same as([])%}
+    
+        <h1>Mes Comics</h1>
+
+        <a href="{{ path('comics.new') }}" class="btn btn-primary mt-2">
+        Ajouter un comics
+        </a>
+
+        {% for message in app.flashes('success') %}
+         <div class="alert alert-success mt-4">
+          {{ message }}
+         </div>
+        {% endfor %}
+
+    <div class="count mt-2" >
+   <span >Il y a {{ comics.getTotalItemCount }} comics au total</span>
+    </div>
+
+    <table class="table table-hover mt-4">
+     <thead>
+      <tr>
+       <th scope="col">Numéro</th>
+       <th scope="col">Nom</th>
+       <th scope="col">Prix</th>
+       <th scope="col">Date de création</th>
+       <th scope="col">Edition</th>
+       <th scope="col">Suppression</th>
+     </tr>
+    </thead>
+    <tbody>
+     {% for comic in comics %}
+      <tr class="table-dark">
+       <th scope="row">{{ comic.id }}</th>
+        <td>{{ comic.nom }}</td>
+        <td>{{ comic.prix }}</td>
+        <td>{{ comic.createdAt|date("d/m/Y") }}</td>
+        <td>
+         <a href="{{ path('comics.edit', { id: comic.id }) }}" class="btn btn-info"> Modifier</a>
+        </td>
+        <td>
+        <a href="{{ path('comics.delete', { id: comic.id }) }}" onclick="return confirm('Voulez-vous vraiment supprimer ce comics ?')" class="btn btn-warning"> Supprimer</a>
+        </td>
+      </tr>
+     {% endfor %}
+    </tbody>
+    </table>
+
+    <div class="navigation d-flex justify-content-center mt-4">
+       {{ knp_pagination_render(comics) }}
+    </div>
+    {% else %}
+        <h4> Il n'y a pas de comics </h4>
+{% endif %}
+   </div>
+{% endblock %}
+
+
