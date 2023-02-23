@@ -1,0 +1,68 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+Ajouter une serie - ComicsStorage
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  <h1 class="mt-4">Ajouter une serie</h1>
+
+{{form_start(form)}}
+  
+     {% for message in app.flashes('succes') %}
+         <div class="alert alert-success mt-4">
+          {{ message }}
+         </div>
+        {% endfor %}
+
+  <div class="form-group">
+         {{ form_label(form.Nom)}}
+         {{ form_widget(form.Nom)}}
+         <div class="form-error">
+         {{ form_errors(form.Nom)}}
+         </div>
+       </div>
+
+  <div class="form-group">
+         {{ form_label(form.Annee)}}
+         {{ form_widget(form.Annee)}}
+         <div class="form-error">
+         {{ form_errors(form.Annee)}}
+         </div>
+       </div>
+
+  <div class="form-group">
+         {{ form_label(form.NbComics)}}
+         {{ form_widget(form.NbComics)}}
+         <div class="form-error">
+         {{ form_errors(form.NbComics)}}
+         </div>
+       </div> 
+
+  <div class="form-group">
+         {{ form_label(form.Description)}}
+         {{ form_widget(form.Description)}}
+         <div class="form-error">
+         {{ form_errors(form.Description)}}
+         </div>
+       </div>
+
+  <div class="form-group">
+         {{ form_label(form.isFavorite)}}
+         {{ form_widget(form.isFavorite)}}
+         <div class="form-error">
+         {{ form_errors(form.isFavorite)}}
+         </div>
+       </div>
+
+{{ form_row(form.Comics) }}
+
+  <div class="form-group">
+         {{ form_row(form.submit) }}
+       </div>
+
+{{ form_end(form) }}
+</div>
+{% endblock %}

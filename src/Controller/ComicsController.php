@@ -77,6 +77,14 @@ class ComicsController extends AbstractController
     
     
     #[Route('/comics/edition/{id}', 'comics.edit', methods: ['GET', 'POST'])]
+    /**
+     * Ce controlleur premet de modifier un comics 
+     *
+     * @param Comics $comics
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     public function edit( 
         Comics $comics, 
         Request $request, 
@@ -104,7 +112,15 @@ class ComicsController extends AbstractController
         ]);
     }
 
+    
     #[Route('/comics/suppression/{id}', 'comics.delete', methods: ['GET'])]
+    /**
+     * Ce controlleur permet de supprimer un comics 
+     *
+     * @param EntityManagerInterface $manager
+     * @param Comics $comics
+     * @return Response
+     */
     public function delete(EntityManagerInterface $manager, Comics $comics) : Response 
     {
 

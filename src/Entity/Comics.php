@@ -79,4 +79,10 @@ class Comics
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->Nom;
+    }
+
 }
