@@ -2,12 +2,14 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
+use App\Entity\User;
+use Faker\Generator;
 use App\Entity\Comics;
 use App\Entity\Series;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
-use Faker\Generator;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
@@ -20,9 +22,10 @@ class AppFixtures extends Fixture
     public function __construct()
     {
         $this->faker = Factory::create('fr_FR');
+        
     }
 
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $manager ): void
     {
         // Comics
         $comics = [];
@@ -39,7 +42,7 @@ class AppFixtures extends Fixture
         for ($j = 0; $j < 25; $j++) { 
             $serie = new Series();
             $serie->setNom($this->faker->word())
-                  ->setAnnée(mt_rand(1903, 2023))
+                  ->setAnnee(mt_rand(1903, 2023))
                   ->setNbComics(mt_rand(0, 1000))
                   ->setDescription($this->faker->text(300))
                   ->setIsFavorite(mt_rand(0,1) == 1 ? true : false);
@@ -52,5 +55,22 @@ class AppFixtures extends Fixture
         }
         
         $manager->flush();
+
+        // Users 
+        for ($i=0; $i < 10; $i++) { 
+            $user = new User();
+            $user->setFullName($this->faker->name())
+                 ->setPseudo(mt_rand(0, 1) === 1 ? $this->faker->firstName() : null)
+                 ->setEmail($this->faker->email())
+                 ->setRoles(['ROLES_USER'])
+                 ->setPlainPassword('password');
+ 
+ 
+                 $manager->persist($user);
+                 $manager->flush();
+
+        }
+
+       
     }
 }
