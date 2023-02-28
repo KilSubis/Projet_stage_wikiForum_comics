@@ -62,7 +62,7 @@ class ComicsController extends AbstractController
              $manager->flush();
 
              $this->addFlash(
-                'succes',
+                'success',
                 'Votre comics a bien été ajouté !'
              );
 
@@ -100,7 +100,7 @@ class ComicsController extends AbstractController
              $manager->flush();
 
              $this->addFlash(
-                'succes',
+                'success',
                 'Votre comics a bien été modifié !'
              );
 
@@ -127,7 +127,7 @@ class ComicsController extends AbstractController
         if(!$comics) {
 
             $this->addFlash(
-                'succes',
+                'success',
                 'Le comics n\'a pas été trouvé!'
              );
 
@@ -138,7 +138,7 @@ class ComicsController extends AbstractController
         $manager->flush();
 
         $this->addFlash(
-            'succes',
+            'success',
             'Votre comics a bien été supprimé !'
          );
 

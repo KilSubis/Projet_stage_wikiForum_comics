@@ -63,7 +63,7 @@ class SerieController extends AbstractController
            $manager->flush();
 
            $this->addFlash(
-            'succes',
+            'success',
             'Votre serie bien été ajouté !'
  );
 
@@ -99,7 +99,7 @@ class SerieController extends AbstractController
              $manager->flush();
 
              $this->addFlash(
-                'succes',
+                'success',
                 'Votre serie a bien été modifiée !'
              );
 
@@ -119,7 +119,7 @@ class SerieController extends AbstractController
         if(!$series) {
 
             $this->addFlash(
-                'succes',
+                'success',
                 'La serie n\'a pas été trouvé!'
              );
 
@@ -130,7 +130,7 @@ class SerieController extends AbstractController
         $manager->flush();
 
         $this->addFlash(
-            'succes',
+            'success',
             'Votre serie a bien été supprimé !'
          );
 

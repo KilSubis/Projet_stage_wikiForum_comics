@@ -11,12 +11,6 @@ Ajouter une serie - ComicsStorage
 
 {{form_start(form)}}
   
-     {% for message in app.flashes('succes') %}
-         <div class="alert alert-success mt-4">
-          {{ message }}
-         </div>
-        {% endfor %}
-
   <div class="form-group">
          {{ form_label(form.Nom)}}
          {{ form_widget(form.Nom)}}
