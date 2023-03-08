@@ -8,8 +8,10 @@ use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SerieController extends AbstractController
@@ -22,6 +24,7 @@ class SerieController extends AbstractController
    * @param Request $request
    * @return Response
    */
+    #[IsGranted('ROLE_USER')]
     #[Route('/series', name: 'series.index', methods: ['GET'])]
     public function index(
         SeriesRepository $repository, 
@@ -31,7 +34,7 @@ class SerieController extends AbstractController
     {
 
         $series = $paginator->paginate(
-            $repository->findAll(),
+            $repository->findBy(['user' => $this->getUser()]),
             $request->query->getInt('page', 1), 
             10 
         );
@@ -48,6 +51,7 @@ class SerieController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/series/creation', name: 'series.new', methods: ['GET','POST'])]
     public function new(Request $request, EntityManagerInterface $manager) : Response
     {
@@ -58,6 +62,7 @@ class SerieController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
            $series = $form->getData();
+           $series->setUser($this->getUser());
 
            $manager->persist($series);
            $manager->flush();
@@ -75,7 +80,6 @@ class SerieController extends AbstractController
         ]);   
     }
 
-    #[Route('/series/edition/{id}', 'series.edit', methods: ['GET', 'POST'])]
     /**
      * Ce controlleur permet de modifier une serie 
      *
@@ -84,6 +88,8 @@ class SerieController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
+    #[Security("is_granted('ROLE_USER') and user === series.getUser()")]
+    #[Route('/series/edition/{id}', 'series.edit', methods: ['GET', 'POST'])]
     public function edit( 
         Series $series, 
         Request $request, 

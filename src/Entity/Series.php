@@ -53,8 +53,13 @@ class Series
     #[ORM\ManyToMany(targetEntity: Comics::class)]
     private Collection $Comics;
 
+    #[ORM\ManyToOne(inversedBy: 'Series')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable();
         $this->Comics = new ArrayCollection();
     }
 
@@ -155,6 +160,18 @@ class Series
     public function removeComic(Comics $comic): self
     {
         $this->Comics->removeElement($comic);
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

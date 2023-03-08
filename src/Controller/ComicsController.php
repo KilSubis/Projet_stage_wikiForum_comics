@@ -4,14 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Comics;
 use App\Form\ComicsType;
-use App\Repository\ComicsRepository;
 use Doctrine\ORM\EntityManager;
+use App\Repository\ComicsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 class ComicsController extends AbstractController
 {
@@ -24,11 +26,12 @@ class ComicsController extends AbstractController
      * @return Response
      */
     #[Route('/comics', name: 'app_comics', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function index(ComicsRepository $repository, PaginatorInterface $paginator, Request $request): Response
     {
 
         $comics = $paginator->paginate(
-            $repository->findAll(),
+            $repository->findBy(['user' => $this->getUser()]),
             $request->query->getInt('page', 1), 
             10 
         );
@@ -46,6 +49,7 @@ class ComicsController extends AbstractController
      * @return Response
      */
     #[Route('comics/nouveau', 'comics.new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(
         Request $request,
         EntityManagerInterface $manager
@@ -57,6 +61,7 @@ class ComicsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
              $comics = $form->getData();
+             $comics->setUser($this->getUser());
              
              $manager->persist($comics);
              $manager->flush();
@@ -75,8 +80,6 @@ class ComicsController extends AbstractController
     }
 
     
-    
-    #[Route('/comics/edition/{id}', 'comics.edit', methods: ['GET', 'POST'])]
     /**
      * Ce controlleur premet de modifier un comics 
      *
@@ -84,7 +87,9 @@ class ComicsController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @return Response
-     */
+     */ 
+    #[Security("is_granted('ROLE_USER') and user === comics.getUser()")]
+    #[Route('/comics/edition/{id}', 'comics.edit', methods: ['GET', 'POST'])]
     public function edit( 
         Comics $comics, 
         Request $request, 

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -47,9 +49,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotNull()]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comics::class, orphanRemoval: true)]
+    private Collection $Comics;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Series::class, orphanRemoval: true)]
+    private Collection $Series;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->Comics = new ArrayCollection();
+        $this->Series = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -176,6 +186,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comics>
+     */
+    public function getComics(): Collection
+    {
+        return $this->Comics;
+    }
+
+    public function addComic(Comics $comic): self
+    {
+        if (!$this->Comics->contains($comic)) {
+            $this->Comics->add($comic);
+            $comic->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComic(Comics $comic): self
+    {
+        if ($this->Comics->removeElement($comic)) {
+            // set the owning side to null (unless already changed)
+            if ($comic->getUser() === $this) {
+                $comic->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Series>
+     */
+    public function getSeries(): Collection
+    {
+        return $this->Series;
+    }
+
+    public function addSeries(Series $series): self
+    {
+        if (!$this->Series->contains($series)) {
+            $this->Series->add($series);
+            $series->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeries(Series $series): self
+    {
+        if ($this->Series->removeElement($series)) {
+            // set the owning side to null (unless already changed)
+            if ($series->getUser() === $this) {
+                $series->setUser(null);
+            }
+        }
 
         return $this;
     }

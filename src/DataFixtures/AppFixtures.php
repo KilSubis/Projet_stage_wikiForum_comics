@@ -27,12 +27,30 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager ): void
     {
+        
+        // Users 
+        $users = [];
+        for ($i=0; $i < 10; $i++) { 
+            $user = new User();
+            $user->setFullName($this->faker->name())
+                 ->setPseudo(mt_rand(0, 1) === 1 ? $this->faker->firstName() : null)
+                 ->setEmail($this->faker->email())
+                 ->setRoles(['ROLES_USER'])
+                 ->setPlainPassword('password');
+ 
+                 $users[] = $user;
+                 $manager->persist($user);
+                 $manager->flush();
+
+        }
+
         // Comics
         $comics = [];
         for ($i = 0; $i < 50; $i++) { 
             $comic = new Comics();
             $comic->setNom($this->faker->word())
-                  ->setPrix(mt_rand(0, 100));
+                  ->setPrix(mt_rand(0, 100))
+                  ->setUser($users[mt_rand(0, count($users) - 1)]);
 
             $comics[] = $comic;   
             $manager->persist($comic);   
@@ -45,7 +63,8 @@ class AppFixtures extends Fixture
                   ->setAnnee(mt_rand(1903, 2023))
                   ->setNbComics(mt_rand(0, 1000))
                   ->setDescription($this->faker->text(300))
-                  ->setIsFavorite(mt_rand(0,1) == 1 ? true : false);
+                  ->setIsFavorite(mt_rand(0,1) == 1 ? true : false)
+                  ->setUser($users[mt_rand(0, count($users) - 1)]);
 
                   for ($k=0; $k < mt_rand(5, 15); $k++) { 
                     $serie->addComic($comics[mt_rand(0, count($comics) - 1)]);
@@ -56,21 +75,6 @@ class AppFixtures extends Fixture
         
         $manager->flush();
 
-        // Users 
-        for ($i=0; $i < 10; $i++) { 
-            $user = new User();
-            $user->setFullName($this->faker->name())
-                 ->setPseudo(mt_rand(0, 1) === 1 ? $this->faker->firstName() : null)
-                 ->setEmail($this->faker->email())
-                 ->setRoles(['ROLES_USER'])
-                 ->setPlainPassword('password');
- 
- 
-                 $manager->persist($user);
-                 $manager->flush();
-
-        }
-
-       
+        
     }
 }
