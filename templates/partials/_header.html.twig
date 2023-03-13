@@ -13,12 +13,17 @@
         </li>
         {% if app.user %}
         <li class="nav-item">
-          <a class="nav-link active" href="{{path('app_comics')}}">Comics
+          <a class="nav-link active" href="{{path('app_comics')}}">Mes comics
             <span class="visually-hidden">(current)</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="{{path('series.index')}}">Series
+          <a class="nav-link active" href="{{path('series.index')}}"> Mes series
+            <span class="visually-hidden">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{{path('serie.community')}}"> Communauté
             <span class="visually-hidden">(current)</span>
           </a>
         </li>

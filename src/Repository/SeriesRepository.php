@@ -21,46 +21,28 @@ class SeriesRepository extends ServiceEntityRepository
         parent::__construct($registry, Series::class);
     }
 
-    public function save(Series $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
+    /**
+     * cette methode permet de trouver des series publiques basée sur le nombre de series 
+     *
+     * @param integer $nbSeries
+     * @return array
+     */
+    public function findPublicSerie(?int $nbSeries): array
+    {
+        sleep(3);
+        $queryBuilder = $this->createQueryBuilder('r')
+            ->where('r.isPublic = 1')
+            ->orderBy('r.createdAt', 'DESC');
+
+
+        if ($nbSeries !== 0 || $nbSeries !== null) {
+            $queryBuilder->setMaxResults($nbSeries);
         }
+
+        return $queryBuilder->getQuery()
+            ->getResult();
     }
 
-    public function remove(Series $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-//    /**
-//     * @return Series[] Returns an array of Series objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Series
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

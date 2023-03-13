@@ -1,20 +1,14 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% block title %}
-	ComicsStorage  - Acceuil
+{% block title %}ComicsStorage -  Series
 {% endblock %}
 
 {% block body %}
 	<div class="container mt-4">
-		<div class="jumbotron">
-			<h1 class="display-4">Bienvenue sur ComicsStorage  !</h1>
-			<p class="lead">ComicsStorage est un petit site pour  renseigner vos comics et y acceder a toute heure!</p>
-			<hr class="my-4">
-			<p>Cliquez sur le bouton inscription pour continuer</p>
-			<a class="btn btn-primary btn-lg" href="http://127.0.0.1:8000/inscription" role="button">Inscription</a>
-		</div>
-		<div class="series">
-			<h2 class="mt-4">Series de la communauté</h2>
+		{% if not series is same as([])%}
+
+			<h1>Series de la communauté</h1>
+
 			<div class="d-flex justify-content-between flex-wrap mt-4">
 				{% for serie in series %}
 					<a class="card border-primary mb-3 text-decoration-none " style="max-width: 20rem;" href="http://127.0.0.1:8000/series/{{serie.id}}" role="button">
@@ -26,10 +20,13 @@
 					</a>
 				{% endfor %}
 			</div>
-		</div>
 
+
+		{% else %}
+			<h4>
+				Il n'y a pas de series</h4>
+		{% endif %}
 	</div>
-
-
 {% endblock %}
+
 

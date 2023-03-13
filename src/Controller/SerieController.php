@@ -2,17 +2,24 @@
 
 namespace App\Controller;
 
+use App\Entity\Mark;
 use App\Entity\Series;
+use App\Form\MarkType;
 use App\Form\SerieType;
+use App\Repository\MarkRepository;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security as ConfigurationSecurity;
+
 
 class SerieController extends AbstractController
 {
@@ -43,6 +50,35 @@ class SerieController extends AbstractController
             'series' => $series,
         ]);
     }
+
+     /**
+     * Ce controlleur permet de voir des series publiques
+     *
+     * @return Response
+     */
+    #[Route('/series/communaute', 'serie.community', methods: ['GET'])]
+    public function indexPublic(
+        SeriesRepository $repository,
+        PaginatorInterface $paginator,
+        Request $request
+    ): Response {
+        $cache = new FilesystemAdapter();
+        $data = $cache->get('series', function (ItemInterface $item) use ($repository) {
+            $item->expiresAfter(15);
+            return $repository->findPublicSerie(null);
+        });
+
+        $series = $paginator->paginate(
+            $data,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('pages/serie/community.html.twig', [
+            'series' => $series
+        ]);
+    }
+
 
     /**
      * Ce controlleur affiche un formulaire qui ajoute une serie 
@@ -143,6 +179,52 @@ class SerieController extends AbstractController
         return $this->redirectToRoute('series.index');
     }
 
+    #[ConfigurationSecurity("is_granted('ROLE_USER') and (series.getIsPublic() === true || user === series.getUser())")]
+    #[Route('/series/{id}', name: 'series.show', methods: ['GET', 'POST'])]
+    public function show(
+        Series $series, 
+        Request $request, 
+        MarkRepository $markRepository,
+        EntityManagerInterface $manager
+        ) : Response
+    {
+        $mark = new Mark();
+        $form = $this->createForm(MarkType::class, $mark);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $mark->setUser($this->getUser());
+            $mark->setSeries($series);
+
+            $existingMark = $markRepository->findOneBy([
+                'user' => $this->getUser(),
+                'series' => $series
+            ]);
+
+            if (!$existingMark) {
+                $manager->persist($mark);
+            }else {
+                $existingMark->setMark(
+                    $form->getData()->getMark()
+                );
+            }
+
+            $manager->flush();
+
+            $this->addFlash(
+               'success',
+                'Votre note a bien été prise en compte!'
+            );
+
+            return $this->redirectToRoute('series.show', ['id' => $series->getId()]);
+
+        }
+
+        return $this->render('pages/serie/show.html.twig', [
+            'series' => $series,
+            'form' => $form->createView()
+        ]);
+    }
 }
 
 
