@@ -8,17 +8,22 @@ use App\Repository\ComicsRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Form\FormBuilderInterface;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
+
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Config\VichUploaderConfig;
+use Vich\UploaderBundle\Form\Type\VichFileType;
+
 class SerieType extends AbstractType
 {
     
@@ -113,6 +118,18 @@ class SerieType extends AbstractType
                     new Assert\NotNull()
                 ]
             ])
+
+            ->add('imagefile', VichImageType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label' => 'Image de la serie',
+                'label_attr' => [
+                    'class' => 'form-label mt-4'
+                ]
+               
+            ])
+
             ->add('Comics', EntityType::class, [
                 'class' => Comics::class,
                 'label' => 'Comics : ',

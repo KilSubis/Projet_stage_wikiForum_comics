@@ -9,6 +9,8 @@ Ajouter une serie - ComicsStorage
 
   <h1 class="mt-4">Ajouter une serie</h1>
 
+  
+
 {{form_start(form)}}
   
   <div class="form-group">
@@ -50,6 +52,8 @@ Ajouter une serie - ComicsStorage
          {{ form_errors(form.isFavorite)}}
          </div>
        </div>
+
+{{ form_row(form.imagefile) }}
 
 {{ form_row(form.Comics) }}
 

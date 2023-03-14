@@ -18,6 +18,10 @@
 			{{ series.nom }}
 		</h1>
 
+		<div class="series_image">
+		<img style="max-width: 500px;" src="{{ vich_uploader_asset(series, 'imagefile')}}">
+		</div
+
 		<span class="badge bg-secondary">La moyenne de cette serie est de
 			{{ series.average|number_format(2, '.', ',') }}/5
 		</span>

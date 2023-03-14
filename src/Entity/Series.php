@@ -2,16 +2,21 @@
 
 namespace App\Entity;
 
-use App\Repository\SeriesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+
+use Vich\Uploadable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Repository\SeriesRepository;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[UniqueEntity('Nom')]
 #[ORM\Entity(repositoryClass: SeriesRepository::class)]
+#[Vich\Uploadable]
 class Series
 {
     #[ORM\Id]
@@ -23,6 +28,12 @@ class Series
     #[Assert\NotBlank()]
     #[Assert\Length(min: 2, max: 50)]
     private ?string $Nom = null;
+
+    #[Vich\UploadableField(mapping: 'series_images', fileNameProperty: 'imageName')]
+    private ?File $imagefile = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $imageName = null;
 
     #[ORM\Column]
     #[Assert\Positive()]
@@ -54,6 +65,10 @@ class Series
     #[Assert\NotNull()]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column]
+    #[Assert\NotNull()]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     #[ORM\ManyToMany(targetEntity: Comics::class)]
     private Collection $Comics;
 
@@ -71,6 +86,7 @@ class Series
         $this->createdAt = new \DateTimeImmutable();
         $this->Comics = new ArrayCollection();
         $this->marks = new ArrayCollection();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -88,6 +104,32 @@ class Series
         $this->Nom = $Nom;
 
         return $this;
+    }
+
+    public function setImagefile(?File $imagefile = null): void
+    {
+        $this->imagefile = $imagefile;
+
+        if (null !== $imagefile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getImagefile(): ?File
+    {
+        return $this->imagefile;
+    }
+
+    public function setImageName(?string $imageName): void
+    {
+        $this->imageName = $imageName;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
     }
 
     public function getAnnee(): ?int
@@ -158,6 +200,26 @@ class Series
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+/**
+     * Get the value of updatedAt
+     */ 
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set the value of updatedAt
+     *
+     * @return  self
+     */ 
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -252,4 +314,6 @@ class Series
 
         return $this->average;
     }
+
+    
 }

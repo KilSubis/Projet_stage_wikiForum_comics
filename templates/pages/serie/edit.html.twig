@@ -9,6 +9,8 @@ Modification d'un comics - ComicsStorage
 
   <h1 class="mt-4">Modifier une serie</h1>
 
+  
+
   {{form_start(form)}}
   
      {% for message in app.flashes('succes') %}
@@ -56,6 +58,8 @@ Modification d'un comics - ComicsStorage
          {{ form_errors(form.isFavorite)}}
          </div>
        </div>
+
+{{ form_row(form.imagefile) }}
 
 {{ form_row(form.Comics) }}
 
