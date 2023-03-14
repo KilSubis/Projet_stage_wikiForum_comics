@@ -119,6 +119,7 @@ class ComicsController extends AbstractController
 
     
     #[Route('/comics/suppression/{id}', 'comics.delete', methods: ['GET'])]
+    #[Security("is_granted('ROLE_USER') and user === comics.getUser()")]
     /**
      * Ce controlleur permet de supprimer un comics 
      *

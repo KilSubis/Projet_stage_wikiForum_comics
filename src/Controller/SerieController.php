@@ -154,6 +154,7 @@ class SerieController extends AbstractController
     }
 
     #[Route('/series/suppression/{id}', 'series.delete', methods: ['GET'])]
+    #[Security("is_granted('ROLE_USER') and user === series.getUser()")]
     
     public function delete(EntityManagerInterface $manager, Series $series) : Response 
     {

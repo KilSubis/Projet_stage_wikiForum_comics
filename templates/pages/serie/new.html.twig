@@ -15,6 +15,7 @@ Ajouter une serie - ComicsStorage
   
   <div class="form-group">
          {{ form_label(form.Nom)}}
+         {{ form_row(form.imagefile) }}
          {{ form_widget(form.Nom)}}
          <div class="form-error">
          {{ form_errors(form.Nom)}}
@@ -53,7 +54,7 @@ Ajouter une serie - ComicsStorage
          </div>
        </div>
 
-{{ form_row(form.imagefile) }}
+
 
 {{ form_row(form.Comics) }}
 

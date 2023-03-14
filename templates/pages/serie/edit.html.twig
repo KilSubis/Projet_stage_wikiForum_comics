@@ -20,6 +20,7 @@ Modification d'un comics - ComicsStorage
         {% endfor %}
 
   <div class="form-group">
+  {{ form_row(form.imagefile) }}
          {{ form_label(form.Nom)}}
          {{ form_widget(form.Nom)}}
          <div class="form-error">
@@ -59,7 +60,7 @@ Modification d'un comics - ComicsStorage
          </div>
        </div>
 
-{{ form_row(form.imagefile) }}
+
 
 {{ form_row(form.Comics) }}
 

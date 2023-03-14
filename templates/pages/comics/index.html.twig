@@ -39,7 +39,7 @@
       <tr class="table-dark">
        <th scope="row">{{ comic.id }}</th>
         <td>{{ comic.nom }}</td>
-        <td>{{ comic.prix }}</td>
+        <td>{{ comic.prix|number_format(2, '.', ',') }} €</td>
         <td>{{ comic.createdAt|date("d/m/Y") }}</td>
         <td>
          <a href="{{ path('comics.edit', { id: comic.id }) }}" class="btn btn-info"> Modifier</a>
