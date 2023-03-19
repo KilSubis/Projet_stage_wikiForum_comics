@@ -32,12 +32,24 @@ class AppFixtures extends Fixture
         
         // Users 
         $users = [];
+
+        $admin = new User();
+        $admin->setFullName('Administrateur de ComicsStorage')
+             ->setPseudo(null)
+             ->setEmail('admin@comicsstorage.fr')
+             ->setRoles(['ROLE_USER', 'ROLE_ADMIN'])
+             ->setPlainPassword('password');
+
+             $users[] = $admin;
+             $manager->persist($admin);
+
+
         for ($i=0; $i < 10; $i++) { 
             $user = new User();
             $user->setFullName($this->faker->name())
                  ->setPseudo(mt_rand(0, 1) === 1 ? $this->faker->firstName() : null)
                  ->setEmail($this->faker->email())
-                 ->setRoles(['ROLES_USER'])
+                 ->setRoles(['ROLE_USER'])
                  ->setPlainPassword('password');
  
                  $users[] = $user;
