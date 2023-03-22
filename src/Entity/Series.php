@@ -54,8 +54,8 @@ class Series
     #[Assert\NotBlank()]
     private ?string $Description = null;
 
-    #[ORM\Column]
-    private ?bool $isFavorite = null;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $isFavorite = false;
 
     #[ORM\Column(type: 'boolean')]
     private $isPublic = false;
