@@ -63,5 +63,4 @@ class SeriesTest extends KernelTestCase
 
         $this->assertTrue(2.0 === $series->getAverage());
     }
-
 }
